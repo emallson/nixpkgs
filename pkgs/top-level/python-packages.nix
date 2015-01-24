@@ -7243,11 +7243,11 @@ let
   };
 
   pip = buildPythonPackage rec {
-    version = "1.5.6";
+    version = "6.0.6";
     name = "pip-${version}";
     src = pkgs.fetchurl {
       url = "http://pypi.python.org/packages/source/p/pip/pip-${version}.tar.gz";
-      md5 = "01026f87978932060cc86c1dc527903e";
+      md5 = "bbb17814bdf82187f46aaf9cec6b6caa";
     };
     buildInputs = with self; [ mock scripttest virtualenv pytest ];
   };
