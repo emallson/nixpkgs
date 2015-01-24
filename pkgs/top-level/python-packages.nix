@@ -13131,7 +13131,7 @@ let
       url = "https://github.com/erikrose/more-itertools/archive/2.2.tar.gz";
       sha256 = "4606417182e0a1289e23fb7f964a64ca9fdaafb7c1999034dc4fa0cc5850c478";
     };
-   
+
     propagatedBuildInputs = with self; [ nose ];
 
     meta = {
@@ -13395,7 +13395,7 @@ let
       license = licenses.mit;
     };
   };
-  
+
   html2text = buildPythonPackage rec {
     name = "html2text-2014.12.29";
 
@@ -13457,5 +13457,18 @@ let
     };
   };
 
+  scikit-image = buildPythonPackage rec {
+    version = "0.10.1";
+    name = "scikit-image-${version}";
+    disabled = !isPy27;
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/s/scikit-image/scikit-image-${version}.tar.gz";
+      md5 = "ee48bdd23933272ee4906980515e8b54";
+    };
+
+    buildInputs = with self; [ scipy numpy six ];
+
+  };
 
 }); in pythonPackages
