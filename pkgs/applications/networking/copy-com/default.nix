@@ -1,4 +1,4 @@
-{ stdenv, coreutils, fetchurl, patchelf, gcc }:
+{ stdenv, coreutils, fetchurl, patchelf, gcc, libX11, libXext, libXrender, libICE, libSM, glib, freetype, fontconfig }:
 
 let
   arch = if stdenv.system == "x86_64-linux" then "x86_64"
@@ -12,20 +12,33 @@ let
     else throw "Copy.com client for: ${stdenv.system} not supported!";
 
   appdir = "opt/copy";
-  
+
 in stdenv.mkDerivation {
-  
+
   name = "copy-com-1.47.0410";
 
   src = fetchurl {
     # Note: copy.com doesn't version this file. Annoying.
     url = "https://copy.com/install/linux/Copy.tgz";
-    sha256 = "a48c69f6798f888617cfeef5359829e619057ae0e6edf3940b4ea6c81131012a";
+    sha256 = "f474099d86baadd05758fa33164dae44b0127933f73c6a6a6e2f243bbf62bc42";
   };
 
   buildInputs = [ coreutils patchelf ];
 
   phases = "unpackPhase installPhase";
+
+  libPath = stdenv.lib.makeLibraryPath [
+    gcc
+    libX11
+    libXext
+    libXrender
+    libICE
+    libSM
+    glib
+    freetype
+    fontconfig
+  ];
+
 
   installPhase = ''
     mkdir -p $out/opt
@@ -36,8 +49,12 @@ in stdenv.mkDerivation {
     ln -s "$out/${appdir}/CopyCmd" "$out/bin/copy_cmd"
     patchelf --set-interpreter ${stdenv.glibc}/lib/${interpreter} \
       "$out/${appdir}/CopyConsole"
+    patchelf --set-interpreter ${stdenv.glibc}/lib/${interpreter} \
+      "$out/${appdir}/CopyAgent"
+    patchelf --set-interpreter ${stdenv.glibc}/lib/${interpreter} \
+      "$out/${appdir}/CopyCmd"
 
-    RPATH=${gcc.cc}/lib:$out/${appdir}
+    RPATH=$libPath:$out/${appdir}
     echo "updating rpaths to: $RPATH"
     find "$out/${appdir}" -type f -a -perm +0100 \
       -print -exec patchelf --force-rpath --set-rpath "$RPATH" {} \;
