@@ -1802,11 +1802,11 @@ let
   };
 
   cython = buildPythonPackage rec {
-    name = "Cython-0.20.1";
+    name = "Cython-0.21";
 
     src = pkgs.fetchurl {
       url = "http://www.cython.org/release/${name}.tar.gz";
-      sha256 = "0v3nc9z5ynnnjdgcgkyy5g9wazmkjv53nnpjal1v3mr199s6799i";
+      sha256 = "0cd5787fb3f1eaf8326b21bdfcb90aabd3eca7c214c5b7b503fbb82da97bbaa0";
     };
 
     setupPyBuildFlags = ["--build-base=$out"];
@@ -13467,7 +13467,45 @@ let
       md5 = "ee48bdd23933272ee4906980515e8b54";
     };
 
-    buildInputs = with self; [ scipy numpy six ];
+    buildInputs = with self; [ cython scipy numpy six matplotlib pillow networkx imread ];
+    propagatedBuildInputs = buildInputs;
+
+  };
+
+  warc = buildPythonPackage rec {
+    version = "0.2.1";
+    name = "warc-${version}";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/w/warc/warc-0.2.1.tar.gz";
+      md5 = "3235a8b68e28c77d45227b2850654776";
+    };
+  };
+
+  networkx = buildPythonPackage rec {
+    version = "1.9.1";
+    name = "networkx-${version}";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/n/networkx/networkx-1.9.1.tar.gz";
+      md5 = "a2d9ee8427c5636426f319968e0af9f2";
+    };
+
+    buildInputs = [ decorator nose ];
+    propagatedBuildInputs = buildInputs;
+  };
+
+  imread = buildPythonPackage rec {
+    version = "0.5.1";
+    name = "imread-${version}";
+
+    src = pkgs.fetchurl {
+      url = https://pypi.python.org/packages/source/i/imread/imread-0.5.1.tar.gz;
+      md5 = "e038158211b5e2bb28bc0cd2b40fba79";
+    };
+
+    buildInputs = [ nose numpy pkgs.libjpeg pkgs.libpng pkgs.libtiff ];
+    propagatedBuildInputs = buildInputs;
 
   };
 
