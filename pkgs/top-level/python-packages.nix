@@ -13509,4 +13509,17 @@ let
 
   };
 
+  importmagic = buildPythonPackage rec {
+    version = "0.1.3";
+    name = "importmagic-${version}";
+
+    src = pkgs.fetchurl {
+      url = https://pypi.python.org/packages/source/i/importmagic/importmagic-0.1.3.tar.gz;
+      md5 = "6828187b7d9f1084fb8b09fcfb95381d";
+    };
+
+    buildInputs = [ ];
+    propagatedBuildInputs = buildInputs;
+  };
+
 }); in pythonPackages
